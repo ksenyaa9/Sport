@@ -1,0 +1,495 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище SportComplexYurmatyModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Clients">
+          <Key>
+            <PropertyRef Name="ClientId" />
+          </Key>
+          <Property Name="ClientId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="MiddleName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Phone" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="DateBith" Type="date" Nullable="false" />
+          <Property Name="RegistrationDate" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Subscriptions">
+          <Key>
+            <PropertyRef Name="SubscriptionId" />
+          </Key>
+          <Property Name="SubscriptionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientId" Type="int" Nullable="false" />
+          <Property Name="SubscriptionTypeId" Type="int" Nullable="false" />
+          <Property Name="StartDate" Type="date" Nullable="false" />
+          <Property Name="EndDate" Type="date" Nullable="false" />
+          <Property Name="Status" Type="nvarchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SubscriptionTypes">
+          <Key>
+            <PropertyRef Name="SubscriptionTypeId" />
+          </Key>
+          <Property Name="SubscriptionTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="AccessType" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="DurationDays" Type="int" Nullable="false" />
+          <Property Name="Price" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="200" />
+          <Property Name="IsPersonalTraining" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TrainerSessions">
+          <Key>
+            <PropertyRef Name="PackageId" />
+            <PropertyRef Name="TrainerId" />
+          </Key>
+          <Property Name="PackageId" Type="int" Nullable="false" />
+          <Property Name="TrainerId" Type="int" Nullable="false" />
+          <Property Name="SessionDateTime" Type="datetime" Nullable="false" />
+          <Property Name="Status" Type="nvarchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TrainingPackages">
+          <Key>
+            <PropertyRef Name="PackageId" />
+          </Key>
+          <Property Name="PackageId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SubscriptionId" Type="int" Nullable="false" />
+          <Property Name="TrainerId" Type="int" Nullable="false" />
+          <Property Name="RemainingSessions" Type="int" Nullable="false" />
+          <Property Name="PurchaseDate" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="TrainerId" />
+          </Key>
+          <Property Name="TrainerId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RoleId" Type="int" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="MiddleName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Phone" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Login" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__Subscript__Clien__35BCFE0A">
+          <End Role="Clients" Type="Self.Clients" Multiplicity="1" />
+          <End Role="Subscriptions" Type="Self.Subscriptions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Clients">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="Subscriptions">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Subscript__Subsc__37A5467C">
+          <End Role="SubscriptionTypes" Type="Self.SubscriptionTypes" Multiplicity="1" />
+          <End Role="Subscriptions" Type="Self.Subscriptions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubscriptionTypes">
+              <PropertyRef Name="SubscriptionTypeId" />
+            </Principal>
+            <Dependent Role="Subscriptions">
+              <PropertyRef Name="SubscriptionTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TrainingP__Subsc__3A81B327">
+          <End Role="Subscriptions" Type="Self.Subscriptions" Multiplicity="1" />
+          <End Role="TrainingPackages" Type="Self.TrainingPackages" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Subscriptions">
+              <PropertyRef Name="SubscriptionId" />
+            </Principal>
+            <Dependent Role="TrainingPackages">
+              <PropertyRef Name="SubscriptionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TrainerSessions_Trainers">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="TrainerSessions" Type="Self.TrainerSessions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="TrainerId" />
+            </Principal>
+            <Dependent Role="TrainerSessions">
+              <PropertyRef Name="TrainerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TrainerSessions_TrainingPackages">
+          <End Role="TrainingPackages" Type="Self.TrainingPackages" Multiplicity="1" />
+          <End Role="TrainerSessions" Type="Self.TrainerSessions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TrainingPackages">
+              <PropertyRef Name="PackageId" />
+            </Principal>
+            <Dependent Role="TrainerSessions">
+              <PropertyRef Name="PackageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Role">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище SportComplexYurmatyModelContainer">
+          <EntitySet Name="Clients" EntityType="Self.Clients" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Subscriptions" EntityType="Self.Subscriptions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SubscriptionTypes" EntityType="Self.SubscriptionTypes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TrainerSessions" EntityType="Self.TrainerSessions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TrainingPackages" EntityType="Self.TrainingPackages" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Subscript__Clien__35BCFE0A" Association="Self.FK__Subscript__Clien__35BCFE0A">
+            <End Role="Clients" EntitySet="Clients" />
+            <End Role="Subscriptions" EntitySet="Subscriptions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Subscript__Subsc__37A5467C" Association="Self.FK__Subscript__Subsc__37A5467C">
+            <End Role="SubscriptionTypes" EntitySet="SubscriptionTypes" />
+            <End Role="Subscriptions" EntitySet="Subscriptions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TrainingP__Subsc__3A81B327" Association="Self.FK__TrainingP__Subsc__3A81B327">
+            <End Role="Subscriptions" EntitySet="Subscriptions" />
+            <End Role="TrainingPackages" EntitySet="TrainingPackages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TrainerSessions_Trainers" Association="Self.FK_TrainerSessions_Trainers">
+            <End Role="User" EntitySet="User" />
+            <End Role="TrainerSessions" EntitySet="TrainerSessions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TrainerSessions_TrainingPackages" Association="Self.FK_TrainerSessions_TrainingPackages">
+            <End Role="TrainingPackages" EntitySet="TrainingPackages" />
+            <End Role="TrainerSessions" EntitySet="TrainerSessions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Role" Association="Self.FK_User_Role">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SportComplexYurmatyModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Clients">
+          <Key>
+            <PropertyRef Name="ClientId" />
+          </Key>
+          <Property Name="ClientId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MiddleName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DateBith" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="RegistrationDate" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Subscriptions" Relationship="Self.FK__Subscript__Clien__35BCFE0A" FromRole="Clients" ToRole="Subscriptions" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Self.FK_User_Role" FromRole="Role" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Subscriptions">
+          <Key>
+            <PropertyRef Name="SubscriptionId" />
+          </Key>
+          <Property Name="SubscriptionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientId" Type="Int32" Nullable="false" />
+          <Property Name="SubscriptionTypeId" Type="Int32" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Clients" Relationship="Self.FK__Subscript__Clien__35BCFE0A" FromRole="Subscriptions" ToRole="Clients" />
+          <NavigationProperty Name="SubscriptionTypes" Relationship="Self.FK__Subscript__Subsc__37A5467C" FromRole="Subscriptions" ToRole="SubscriptionTypes" />
+          <NavigationProperty Name="TrainingPackages" Relationship="Self.FK__TrainingP__Subsc__3A81B327" FromRole="Subscriptions" ToRole="TrainingPackages" />
+        </EntityType>
+        <EntityType Name="SubscriptionTypes">
+          <Key>
+            <PropertyRef Name="SubscriptionTypeId" />
+          </Key>
+          <Property Name="SubscriptionTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AccessType" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DurationDays" Type="Int32" Nullable="false" />
+          <Property Name="Price" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="IsPersonalTraining" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Subscriptions" Relationship="Self.FK__Subscript__Subsc__37A5467C" FromRole="SubscriptionTypes" ToRole="Subscriptions" />
+        </EntityType>
+        <EntityType Name="TrainerSessions">
+          <Key>
+            <PropertyRef Name="PackageId" />
+            <PropertyRef Name="TrainerId" />
+          </Key>
+          <Property Name="PackageId" Type="Int32" Nullable="false" />
+          <Property Name="TrainerId" Type="Int32" Nullable="false" />
+          <Property Name="SessionDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Self.FK_TrainerSessions_Trainers" FromRole="TrainerSessions" ToRole="User" />
+          <NavigationProperty Name="TrainingPackages" Relationship="Self.FK_TrainerSessions_TrainingPackages" FromRole="TrainerSessions" ToRole="TrainingPackages" />
+        </EntityType>
+        <EntityType Name="TrainingPackages">
+          <Key>
+            <PropertyRef Name="PackageId" />
+          </Key>
+          <Property Name="PackageId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SubscriptionId" Type="Int32" Nullable="false" />
+          <Property Name="TrainerId" Type="Int32" Nullable="false" />
+          <Property Name="RemainingSessions" Type="Int32" Nullable="false" />
+          <Property Name="PurchaseDate" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Subscriptions" Relationship="Self.FK__TrainingP__Subsc__3A81B327" FromRole="TrainingPackages" ToRole="Subscriptions" />
+          <NavigationProperty Name="TrainerSessions" Relationship="Self.FK_TrainerSessions_TrainingPackages" FromRole="TrainingPackages" ToRole="TrainerSessions" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="TrainerId" />
+          </Key>
+          <Property Name="TrainerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RoleId" Type="Int32" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MiddleName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Login" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Role" Relationship="Self.FK_User_Role" FromRole="User" ToRole="Role" />
+          <NavigationProperty Name="TrainerSessions" Relationship="Self.FK_TrainerSessions_Trainers" FromRole="User" ToRole="TrainerSessions" />
+        </EntityType>
+        <Association Name="FK__Subscript__Clien__35BCFE0A">
+          <End Role="Clients" Type="Self.Clients" Multiplicity="1" />
+          <End Role="Subscriptions" Type="Self.Subscriptions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Clients">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="Subscriptions">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Role">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Subscript__Subsc__37A5467C">
+          <End Role="SubscriptionTypes" Type="Self.SubscriptionTypes" Multiplicity="1" />
+          <End Role="Subscriptions" Type="Self.Subscriptions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubscriptionTypes">
+              <PropertyRef Name="SubscriptionTypeId" />
+            </Principal>
+            <Dependent Role="Subscriptions">
+              <PropertyRef Name="SubscriptionTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TrainingP__Subsc__3A81B327">
+          <End Role="Subscriptions" Type="Self.Subscriptions" Multiplicity="1" />
+          <End Role="TrainingPackages" Type="Self.TrainingPackages" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Subscriptions">
+              <PropertyRef Name="SubscriptionId" />
+            </Principal>
+            <Dependent Role="TrainingPackages">
+              <PropertyRef Name="SubscriptionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TrainerSessions_Trainers">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="TrainerSessions" Type="Self.TrainerSessions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="TrainerId" />
+            </Principal>
+            <Dependent Role="TrainerSessions">
+              <PropertyRef Name="TrainerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TrainerSessions_TrainingPackages">
+          <End Role="TrainingPackages" Type="Self.TrainingPackages" Multiplicity="1" />
+          <End Role="TrainerSessions" Type="Self.TrainerSessions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TrainingPackages">
+              <PropertyRef Name="PackageId" />
+            </Principal>
+            <Dependent Role="TrainerSessions">
+              <PropertyRef Name="PackageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SportComplexYurmatyEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Clients" EntityType="Self.Clients" />
+          <EntitySet Name="Role" EntityType="Self.Role" />
+          <EntitySet Name="Subscriptions" EntityType="Self.Subscriptions" />
+          <EntitySet Name="SubscriptionTypes" EntityType="Self.SubscriptionTypes" />
+          <EntitySet Name="TrainerSessions" EntityType="Self.TrainerSessions" />
+          <EntitySet Name="TrainingPackages" EntityType="Self.TrainingPackages" />
+          <EntitySet Name="User" EntityType="Self.User" />
+          <AssociationSet Name="FK__Subscript__Clien__35BCFE0A" Association="Self.FK__Subscript__Clien__35BCFE0A">
+            <End Role="Clients" EntitySet="Clients" />
+            <End Role="Subscriptions" EntitySet="Subscriptions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Role" Association="Self.FK_User_Role">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Subscript__Subsc__37A5467C" Association="Self.FK__Subscript__Subsc__37A5467C">
+            <End Role="SubscriptionTypes" EntitySet="SubscriptionTypes" />
+            <End Role="Subscriptions" EntitySet="Subscriptions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TrainingP__Subsc__3A81B327" Association="Self.FK__TrainingP__Subsc__3A81B327">
+            <End Role="Subscriptions" EntitySet="Subscriptions" />
+            <End Role="TrainingPackages" EntitySet="TrainingPackages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TrainerSessions_Trainers" Association="Self.FK_TrainerSessions_Trainers">
+            <End Role="User" EntitySet="User" />
+            <End Role="TrainerSessions" EntitySet="TrainerSessions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TrainerSessions_TrainingPackages" Association="Self.FK_TrainerSessions_TrainingPackages">
+            <End Role="TrainingPackages" EntitySet="TrainingPackages" />
+            <End Role="TrainerSessions" EntitySet="TrainerSessions" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище SportComplexYurmatyModelContainer" CdmEntityContainer="SportComplexYurmatyEntities">
+          <EntitySetMapping Name="Clients">
+            <EntityTypeMapping TypeName="SportComplexYurmatyModel.Clients">
+              <MappingFragment StoreEntitySet="Clients">
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="DateBith" ColumnName="DateBith" />
+                <ScalarProperty Name="RegistrationDate" ColumnName="RegistrationDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Role">
+            <EntityTypeMapping TypeName="SportComplexYurmatyModel.Role">
+              <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Subscriptions">
+            <EntityTypeMapping TypeName="SportComplexYurmatyModel.Subscriptions">
+              <MappingFragment StoreEntitySet="Subscriptions">
+                <ScalarProperty Name="SubscriptionId" ColumnName="SubscriptionId" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="SubscriptionTypeId" ColumnName="SubscriptionTypeId" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SubscriptionTypes">
+            <EntityTypeMapping TypeName="SportComplexYurmatyModel.SubscriptionTypes">
+              <MappingFragment StoreEntitySet="SubscriptionTypes">
+                <ScalarProperty Name="SubscriptionTypeId" ColumnName="SubscriptionTypeId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="AccessType" ColumnName="AccessType" />
+                <ScalarProperty Name="DurationDays" ColumnName="DurationDays" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="IsPersonalTraining" ColumnName="IsPersonalTraining" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TrainerSessions">
+            <EntityTypeMapping TypeName="SportComplexYurmatyModel.TrainerSessions">
+              <MappingFragment StoreEntitySet="TrainerSessions">
+                <ScalarProperty Name="PackageId" ColumnName="PackageId" />
+                <ScalarProperty Name="TrainerId" ColumnName="TrainerId" />
+                <ScalarProperty Name="SessionDateTime" ColumnName="SessionDateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TrainingPackages">
+            <EntityTypeMapping TypeName="SportComplexYurmatyModel.TrainingPackages">
+              <MappingFragment StoreEntitySet="TrainingPackages">
+                <ScalarProperty Name="PackageId" ColumnName="PackageId" />
+                <ScalarProperty Name="SubscriptionId" ColumnName="SubscriptionId" />
+                <ScalarProperty Name="TrainerId" ColumnName="TrainerId" />
+                <ScalarProperty Name="RemainingSessions" ColumnName="RemainingSessions" />
+                <ScalarProperty Name="PurchaseDate" ColumnName="PurchaseDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="User">
+            <EntityTypeMapping TypeName="SportComplexYurmatyModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="TrainerId" ColumnName="TrainerId" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

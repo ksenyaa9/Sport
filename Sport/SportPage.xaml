@@ -1,0 +1,52 @@
+﻿<Page x:Class="Sport.SportPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Sport"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Юрматы" FontFamily="Cascadia Code SemiLight">
+
+    <Page.Resources>
+        <local:SubscriptionConverter x:Key="SubscriptionConverter"/>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Margin="10" Orientation="Horizontal">
+            <TextBlock Text="Введите название для поиска " TextAlignment="Right" Width="330" FontSize="20"></TextBlock>
+            <TextBox Name="TBoxSearch" TextChanged="TBoxSearch_TextChanged" Width="300" FontSize="18"></TextBox>
+        </StackPanel>
+
+        <!-- Таблица клиентов -->
+        <DataGrid x:Name="DGidSports" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Фамилия" Binding="{Binding LastName}" Width="150"/>
+                <DataGridTextColumn Header="Имя" Binding="{Binding FirstName}" Width="100"/>
+                <DataGridTextColumn Header="Отчество" Binding="{Binding MiddleName}" Width="150"/>
+                <DataGridTextColumn Header="Телефон" Binding="{Binding Phone}" Width="150"/>
+                <DataGridTextColumn Header="Дата рождения" Binding="{Binding DateBith, StringFormat=dd.MM.yyyy}" Width="120"/>
+                <DataGridTextColumn Header="Дата регистрации" Binding="{Binding RegistrationDate, StringFormat=dd.MM.yyyy}" Width="120"/>
+                <!-- Новый столбец для типа подписки -->
+                <DataGridTextColumn Header="Тип подписки" Width="300" 
+                                    Binding="{Binding Subscriptions, Converter={StaticResource SubscriptionConverter}}"/>
+                <DataGridTemplateColumn Width="auto" Header="Действия">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Редактировать" FontSize="17" Name="BtnEdit" Click="BtnEdit_Click"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Button Grid.Row="2" HorizontalAlignment="Right" Content="Добавить" Name="AddBtn" Click="AddBtn_Click"/>
+        <Button Grid.Row="2" HorizontalAlignment="Left" Content="Удалить" Name="DltBtn" Click="DltBtn_Click"/>
+    </Grid>
+</Page>
